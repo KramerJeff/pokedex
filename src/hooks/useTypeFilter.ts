@@ -16,27 +16,26 @@ export const useTypeFilter = (
   selectedTypes: PokemonTypeName[],
   filterMode: FilterMode
 ) => {
-  // If no filters, return all IDs
-  if (selectedTypes.length === 0) {
-    return {
-      filteredIds: pokemonIds,
-      isLoading: false,
-    };
-  }
-
   // Fetch Pokemon details for all IDs (will use cache for already-fetched Pokemon)
+  // Always call useQueries to maintain hook order
   const pokemonQueries = useQueries({
     queries: pokemonIds.map((id) => ({
       queryKey: ['pokemon', 'detail', id],
       queryFn: () => fetchPokemon(id),
       staleTime: CACHE_CONFIG.POKEMON_DETAIL_STALE_TIME,
       gcTime: CACHE_CONFIG.POKEMON_DETAIL_CACHE_TIME,
+      enabled: selectedTypes.length > 0, // Only fetch if types are selected
     })),
   });
 
   const isLoading = pokemonQueries.some((query) => query.isLoading);
 
   const filteredIds = useMemo(() => {
+    // If no filters, return all IDs
+    if (selectedTypes.length === 0) {
+      return pokemonIds;
+    }
+
     // Wait for all queries to complete
     if (isLoading) return [];
 
@@ -57,10 +56,10 @@ export const useTypeFilter = (
         }
       })
       .map((pokemon) => pokemon.id);
-  }, [pokemonQueries, selectedTypes, filterMode, isLoading]);
+  }, [pokemonQueries, selectedTypes, filterMode, isLoading, pokemonIds]);
 
   return {
     filteredIds,
-    isLoading,
+    isLoading: selectedTypes.length > 0 ? isLoading : false,
   };
 };
