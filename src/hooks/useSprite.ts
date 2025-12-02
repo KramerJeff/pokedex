@@ -5,19 +5,16 @@ import { getSpriteUrl, getShinySpritUrl } from '../utils/spriteHelpers';
 /**
  * Hook to get sprite URLs for a Pokemon with proper fallback hierarchy
  * @param pokemon - Pokemon data
- * @param shiny - Whether to use shiny sprites (default: false)
- * @returns Sprite URL with fallback support
+ * @returns Both normal and shiny sprite URLs with fallback support
  */
-export const useSprite = (pokemon: Pokemon | null | undefined, shiny = false) => {
-  const spriteUrl = useMemo(() => {
-    if (shiny) {
-      return getShinySpritUrl(pokemon);
-    }
-    return getSpriteUrl(pokemon);
-  }, [pokemon, shiny]);
+export const useSprite = (pokemon: Pokemon | null | undefined) => {
+  const spriteUrl = useMemo(() => getSpriteUrl(pokemon), [pokemon]);
+  const shinySpriteUrl = useMemo(() => getShinySpritUrl(pokemon), [pokemon]);
 
   return {
     spriteUrl,
+    shinySpriteUrl,
     hasSprite: !!spriteUrl,
+    hasShinySprite: !!shinySpriteUrl,
   };
 };

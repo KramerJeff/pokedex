@@ -26,7 +26,7 @@ export const PokemonDetail = ({ allPokemon }: PokemonDetailProps) => {
   const pokemonId = parseInt(id || '0', 10);
 
   const { data: pokemon, isLoading, isError } = usePokemonDetail(pokemonId);
-  const { spriteUrl } = useSprite(pokemon);
+  const { spriteUrl, shinySpriteUrl } = useSprite(pokemon);
 
   // Find current index and get prev/next Pokemon
   const currentIndex = allPokemon.findIndex((p) => p.id === pokemonId);
@@ -128,7 +128,12 @@ export const PokemonDetail = ({ allPokemon }: PokemonDetailProps) => {
 
             {/* Sprite */}
             <div className="flex justify-center mb-6">
-              <PokemonSprite url={spriteUrl} alt={pokemon.name} size="lg" />
+              <PokemonSprite
+                url={spriteUrl}
+                shinyUrl={shinySpriteUrl}
+                alt={pokemon.name}
+                size="lg"
+              />
             </div>
 
             {/* Basic Info */}

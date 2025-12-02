@@ -15,7 +15,7 @@ interface PokemonCardProps {
 export const PokemonCard = memo(({ id, name }: PokemonCardProps) => {
   const navigate = useNavigate();
   const { data: pokemon, isLoading, isError } = usePokemonDetail(id);
-  const { spriteUrl } = useSprite(pokemon);
+  const { spriteUrl, shinySpriteUrl } = useSprite(pokemon);
 
   const handleClick = () => {
     navigate(`/pokemon/${id}`);
@@ -66,7 +66,12 @@ export const PokemonCard = memo(({ id, name }: PokemonCardProps) => {
         </div>
         {/* Sprite */}
         <div className="mb-3 group-hover:scale-110 transition-transform duration-200">
-          <PokemonSprite url={spriteUrl} alt={`${formatPokemonName(pokemon.name)} sprite`} size="md" />
+          <PokemonSprite
+            url={spriteUrl}
+            shinyUrl={shinySpriteUrl}
+            alt={`${formatPokemonName(pokemon.name)} sprite`}
+            size="md"
+          />
         </div>
 
       </div>
