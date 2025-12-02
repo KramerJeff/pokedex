@@ -44,26 +44,31 @@ A React-based Pokédex application displaying all 1000+ Pokemon with Gen III-IV 
 - [x] Add pixelated sprite CSS to [src/index.css](src/index.css)
 - [x] Test data flow with first 50 Pokemon - WORKING!
 
-### 🔄 Phase 4: Search & Filter UI (NEXT - NOT STARTED)
-- [ ] Implement SearchBar with debounced input in [src/components/filters/SearchBar.tsx](src/components/filters/)
-- [ ] Build TypeFilter component in [src/components/filters/TypeFilter.tsx](src/components/filters/)
-- [ ] Build FilterControls component in [src/components/filters/FilterControls.tsx](src/components/filters/)
-- [ ] Integrate filters into App.tsx with filter store
-- [ ] Test search and type filtering functionality
-- [ ] Note: useSearch and useTypeFilter hooks already created in Phase 2
+### ✅ Phase 4: Search & Filter UI (COMPLETE)
+- [x] Implement SearchBar with debounced input (300ms) in [src/components/filters/SearchBar.tsx](src/components/filters/SearchBar.tsx)
+- [x] Build TypeFilter component with 18 type badges in [src/components/filters/TypeFilter.tsx](src/components/filters/TypeFilter.tsx)
+- [x] Build FilterControls component with AND/OR toggle in [src/components/filters/FilterControls.tsx](src/components/filters/FilterControls.tsx)
+- [x] Integrate filters into [src/App.tsx](src/App.tsx) with filter store
+- [x] Test search and type filtering functionality
+- [x] Remove 50 Pokemon limit - now displays all Pokemon
+- [x] Fix Hooks order violation in useTypeFilter
 
-### 📋 Phase 5: Detail View (NOT STARTED)
-- [ ] Setup React Router with `/pokemon/:id` route
-- [ ] Build PokemonDetail modal in [src/components/pokemon/PokemonDetail.tsx](src/components/pokemon/)
-- [ ] Display stats with progress bars
-- [ ] Add Previous/Next navigation
-- [ ] Implement keyboard shortcuts (arrow keys)
+### ✅ Phase 5: Detail View (COMPLETE)
+- [x] Setup React Router with BrowserRouter in [src/main.tsx](src/main.tsx)
+- [x] Build PokemonDetail modal in [src/components/pokemon/PokemonDetail.tsx](src/components/pokemon/PokemonDetail.tsx)
+- [x] Display stats with progress bars
+- [x] Add Previous/Next navigation with Pokemon names
+- [x] Implement keyboard shortcuts (ESC to close, arrow keys to navigate)
+- [x] Add click navigation from PokemonCard
 
-### 📋 Phase 6: Performance (NOT STARTED)
-- [ ] Replace grid with virtualized version using @tanstack/react-virtual
-- [ ] Implement progressive loading with Intersection Observer
-- [ ] Add lazy loading for images with error handling
-- [ ] Create loading skeletons in [src/components/common/Loading.tsx](src/components/common/)
+### ✅ Phase 6: Performance (COMPLETE)
+- [x] Replace grid with virtualized version using @tanstack/react-virtual
+- [x] Implement Intersection Observer for advanced lazy loading
+- [x] Add lazy loading for images with priority support
+- [x] Create performance monitoring utilities in [src/utils/performance.ts](src/utils/performance.ts)
+- [x] Add Core Web Vitals tracking (LCP, FID, CLS)
+- [x] Add scroll FPS monitoring
+- [x] Responsive column calculation matching Tailwind breakpoints
 
 ### 📋 Phase 7: Polish (NOT STARTED)
 - [ ] Style with Tailwind CSS (type colors, hover effects)
@@ -138,13 +143,13 @@ pokedex/
 │   │   │   └── Layout.tsx          ✅ Main layout wrapper
 │   │   ├── pokemon/
 │   │   │   ├── PokemonCard.tsx     ✅ Pokemon card with sprite & types
-│   │   │   ├── PokemonGrid.tsx     ✅ Responsive grid layout
-│   │   │   ├── PokemonDetail.tsx   ⬜ Not created (Phase 5)
-│   │   │   └── PokemonSprite.tsx   ✅ Sprite with loading/error states
+│   │   │   ├── PokemonGrid.tsx     ✅ Virtualized grid with react-virtual
+│   │   │   ├── PokemonDetail.tsx   ✅ Modal with stats & navigation
+│   │   │   └── PokemonSprite.tsx   ✅ Sprite with Intersection Observer
 │   │   ├── filters/
-│   │   │   ├── SearchBar.tsx       ⬜ Not created (Phase 4)
-│   │   │   ├── TypeFilter.tsx      ⬜ Not created (Phase 4)
-│   │   │   └── FilterControls.tsx  ⬜ Not created (Phase 4)
+│   │   │   ├── SearchBar.tsx       ✅ Debounced search (300ms)
+│   │   │   ├── TypeFilter.tsx      ✅ 18 type badges
+│   │   │   └── FilterControls.tsx  ✅ AND/OR toggle
 │   │   └── common/
 │   │       ├── Loading.tsx         ✅ Spinner & skeleton loaders
 │   │       ├── ErrorBoundary.tsx   ⬜ Not created (Phase 7)
@@ -160,10 +165,10 @@ pokedex/
 │   ├── utils/
 │   │   ├── pokemonHelpers.ts       ✅ Format helpers, type colors
 │   │   ├── spriteHelpers.ts        ✅ Sprite URL with fallbacks
-│   │   └── cache.ts                ⬜ Not needed (using React Query)
-│   ├── App.tsx                     ✅ Main app with Pokemon grid
+│   │   └── performance.ts          ✅ Core Web Vitals & FPS monitoring
+│   ├── App.tsx                     ✅ Main app with routing
 │   ├── index.css                   ✅ Tailwind + pixelated CSS
-│   └── main.tsx                    ✅ React Query configured
+│   └── main.tsx                    ✅ React Query + Router configured
 ```
 
 ## Reference: Detailed Implementation Plan
@@ -180,22 +185,25 @@ For the complete, detailed implementation plan including:
 ## Quick Start Development
 
 ### Current Status
-**Phases 1-3 Complete!** The Pokédex is functional and displays the first 50 Pokemon with Gen III sprites.
+**Phases 1-6 Complete!** The Pokédex is fully functional with all 1000+ Pokemon, search, filters, detail views, and performance optimizations.
 
 ### What's Working:
-- ✅ Pokemon data fetching with React Query caching
+- ✅ All 1000+ Pokemon loaded with React Query caching
+- ✅ Virtualized grid with @tanstack/react-virtual (60fps scrolling)
+- ✅ Debounced search by name or ID (300ms)
+- ✅ Multi-type filtering with AND/OR modes
+- ✅ Pokemon detail modal with stats, navigation, and keyboard shortcuts
+- ✅ Intersection Observer for advanced lazy loading
+- ✅ Core Web Vitals monitoring (LCP, FID, CLS)
+- ✅ Scroll FPS monitoring
 - ✅ Responsive grid layout (2-6 columns)
-- ✅ Pokemon cards with sprites, names, IDs, and type badges
-- ✅ Pixelated retro sprite rendering
-- ✅ Loading states and error handling
-- ✅ Lazy image loading
+- ✅ Pixelated retro sprite rendering (Gen III-IV)
 
-### Next Steps (Phase 4):
-1. Build SearchBar component with debounced input
-2. Build TypeFilter component with 18 type badges
-3. Build FilterControls for AND/OR mode toggle
-4. Integrate filter UI with existing filter store and hooks
-5. Remove the 50 Pokemon limit once filtering works
+### Next Steps (Phase 7 - Polish):
+1. Add error boundaries for better error handling
+2. Improve accessibility (ARIA labels, keyboard navigation)
+3. Final responsive design adjustments for mobile
+4. Additional styling polish
 
 ### Running the Project
 ```bash
