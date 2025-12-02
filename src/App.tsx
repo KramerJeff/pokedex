@@ -1,35 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Layout } from './components/layout/Layout';
+import { PokemonGrid } from './components/pokemon/PokemonGrid';
+import { Loading } from './components/common/Loading';
+import { usePokemonList } from './hooks/usePokemonList';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { data: pokemonList, isLoading, isError } = usePokemonList();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Layout>
+      {isLoading && <Loading message="Loading Pokédex..." />}
+
+      {isError && (
+        <div className="text-center py-12">
+          <p className="text-xl text-red-600">Failed to load Pokémon data</p>
+          <p className="text-sm text-gray-600 mt-2">Please try refreshing the page</p>
+        </div>
+      )}
+
+      {pokemonList && !isLoading && (
+        <PokemonGrid pokemonList={pokemonList} limit={50} />
+      )}
+    </Layout>
+  );
 }
 
-export default App
+export default App;

@@ -13,3 +13,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+/* Pixelated sprite rendering for retro Pokemon sprites */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}

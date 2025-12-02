@@ -36,7 +36,7 @@ export const getSpriteUrl = (pokemon: Pokemon | null | undefined): string | null
 /**
  * Get shiny sprite URL for a Pokemon with fallback hierarchy
  */
-export const getShinySprite Url = (pokemon: Pokemon | null | undefined): string | null => {
+export const getShinySpritUrl = (pokemon: Pokemon | null | undefined): string | null => {
   if (!pokemon?.sprites) return null;
 
   const sprites = pokemon.sprites;
