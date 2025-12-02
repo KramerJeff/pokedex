@@ -98,7 +98,7 @@ export const PokemonGrid = ({ pokemonList, isLoading, limit }: PokemonGridProps)
       </p>
       <div
         ref={parentRef}
-        className="h-[calc(100vh-320px)] overflow-auto"
+        className="h-[calc(100vh-320px)] overflow-auto custom-scrollbar"
         style={{ contain: 'strict' }}
         role="region"
         aria-label="Pokemon grid"
