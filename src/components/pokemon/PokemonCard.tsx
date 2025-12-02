@@ -35,27 +35,22 @@ export const PokemonCard = memo(({ id, name }: PokemonCardProps) => {
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 p-4 cursor-pointer group">
       <div className="flex flex-col items-center">
-        {/* Sprite */}
-        <div className="mb-3 group-hover:scale-110 transition-transform duration-200">
-          <PokemonSprite url={spriteUrl} alt={pokemon.name} size="md" />
-        </div>
-
-        {/* ID */}
-        <p className="text-xs text-gray-500 font-mono mb-1">
-          {formatPokemonId(pokemon.id)}
-        </p>
-
         {/* Name */}
         <h3 className="text-lg font-semibold text-gray-800 mb-2 text-center">
-          {formatPokemonName(pokemon.name)}
+          {formatPokemonName(pokemon.name)} {formatPokemonId(pokemon.id)}
         </h3>
 
         {/* Types */}
         <div className="flex gap-2 flex-wrap justify-center">
           {types.map((type) => (
-            <TypeBadge key={type} type={type} size="sm" />
+            <TypeBadge key={type} type={type} size="md" />
           ))}
         </div>
+        {/* Sprite */}
+        <div className="mb-3 group-hover:scale-110 transition-transform duration-200">
+          <PokemonSprite url={spriteUrl} alt={pokemon.name} size="md" />
+        </div>
+
       </div>
     </div>
   );
