@@ -2,16 +2,20 @@ import { useState, useEffect, useRef } from 'react';
 
 interface PokemonSpriteProps {
   url: string | null;
+  shinyUrl?: string | null;
   alt: string;
   size?: 'sm' | 'md' | 'lg';
   priority?: boolean; // For above-the-fold images
 }
 
-export const PokemonSprite = ({ url, alt, size = 'md', priority = false }: PokemonSpriteProps) => {
+export const PokemonSprite = ({ url, shinyUrl, alt, size = 'md', priority = false }: PokemonSpriteProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [shouldLoad, setShouldLoad] = useState(priority);
+  const [isHovered, setIsHovered] = useState(false);
+  const [shinyLoaded, setShinyLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
+  const shinyImgRef = useRef<HTMLImageElement>(null);
 
   const sizeClasses = {
     sm: 'w-16 h-16',
@@ -51,8 +55,23 @@ export const PokemonSprite = ({ url, alt, size = 'md', priority = false }: Pokem
     );
   }
 
+  // Preload shiny sprite on hover
+  useEffect(() => {
+    if (isHovered && shinyUrl && !shinyLoaded) {
+      const img = new Image();
+      img.onload = () => setShinyLoaded(true);
+      img.src = shinyUrl;
+    }
+  }, [isHovered, shinyUrl, shinyLoaded]);
+
+  const displayUrl = isHovered && shinyUrl && shinyLoaded ? shinyUrl : url;
+
   return (
-    <div className={`${sizeClasses[size]} relative`}>
+    <div
+      className={`${sizeClasses[size]} relative`}
+      onMouseEnter={() => shinyUrl && setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {isLoading && shouldLoad && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
@@ -65,8 +84,8 @@ export const PokemonSprite = ({ url, alt, size = 'md', priority = false }: Pokem
       )}
       <img
         ref={imgRef}
-        src={shouldLoad ? url : undefined}
-        alt={alt}
+        src={shouldLoad ? displayUrl : undefined}
+        alt={isHovered && shinyUrl ? `${alt} (shiny)` : alt}
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
         fetchPriority={priority ? 'high' : 'low'}
@@ -77,6 +96,11 @@ export const PokemonSprite = ({ url, alt, size = 'md', priority = false }: Pokem
           setHasError(true);
         }}
       />
+      {shinyUrl && (
+        <div className="absolute bottom-1 right-1 text-xs bg-yellow-400 text-yellow-900 px-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          ✨
+        </div>
+      )}
     </div>
   );
 };
