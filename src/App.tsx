@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { PokemonGrid } from './components/pokemon/PokemonGrid';
+import { PokemonDetail } from './components/pokemon/PokemonDetail';
 import { Loading } from './components/common/Loading';
 import { SearchBar } from './components/filters/SearchBar';
 import { TypeFilter } from './components/filters/TypeFilter';
@@ -50,23 +52,30 @@ function App() {
       )}
 
       {pokemonList && !isLoading && (
-        <div className="space-y-6">
-          {/* Search Bar */}
-          <SearchBar />
+        <>
+          <div className="space-y-6">
+            {/* Search Bar */}
+            <SearchBar />
 
-          {/* Type Filter */}
-          <TypeFilter />
+            {/* Type Filter */}
+            <TypeFilter />
 
-          {/* Filter Controls */}
-          <FilterControls />
+            {/* Filter Controls */}
+            <FilterControls />
 
-          {/* Pokemon Grid */}
-          {isFilterLoading ? (
-            <Loading message="Filtering Pokémon..." />
-          ) : (
-            <PokemonGrid pokemonList={finalPokemonList} />
-          )}
-        </div>
+            {/* Pokemon Grid */}
+            {isFilterLoading ? (
+              <Loading message="Filtering Pokémon..." />
+            ) : (
+              <PokemonGrid pokemonList={finalPokemonList} />
+            )}
+          </div>
+
+          {/* Pokemon Detail Modal - Uses React Router */}
+          <Routes>
+            <Route path="/pokemon/:id" element={<PokemonDetail allPokemon={pokemonList} />} />
+          </Routes>
+        </>
       )}
     </Layout>
   );

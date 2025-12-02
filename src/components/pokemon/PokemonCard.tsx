@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usePokemonDetail } from '../../hooks/usePokemonDetail';
 import { useSprite } from '../../hooks/useSprite';
 import { formatPokemonName, formatPokemonId, getPokemonTypes } from '../../utils/pokemonHelpers';
@@ -12,8 +13,13 @@ interface PokemonCardProps {
 }
 
 export const PokemonCard = memo(({ id, name }: PokemonCardProps) => {
+  const navigate = useNavigate();
   const { data: pokemon, isLoading, isError } = usePokemonDetail(id);
   const { spriteUrl } = useSprite(pokemon);
+
+  const handleClick = () => {
+    navigate(`/pokemon/${id}`);
+  };
 
   if (isLoading) {
     return <CardSkeleton />;
@@ -33,7 +39,10 @@ export const PokemonCard = memo(({ id, name }: PokemonCardProps) => {
   const types = getPokemonTypes(pokemon);
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 p-4 cursor-pointer group">
+    <div
+      onClick={handleClick}
+      className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 p-4 cursor-pointer group"
+    >
       <div className="flex flex-col items-center">
         {/* Name */}
         <h3 className="text-lg font-semibold text-gray-800 mb-2 text-center">
