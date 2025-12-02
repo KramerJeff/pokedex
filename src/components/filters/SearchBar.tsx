@@ -26,30 +26,37 @@ export const SearchBar = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" role="search">
+      <label htmlFor="pokemon-search" className="sr-only">
+        Search Pokemon by name or ID
+      </label>
       <div className="relative">
         <input
+          id="pokemon-search"
           type="text"
           value={localQuery}
           onChange={(e) => setLocalQuery(e.target.value)}
           placeholder="Search by name or ID..."
           className="w-full px-4 py-2 pl-10 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+          aria-label="Search Pokemon by name or ID"
+          aria-describedby={localQuery ? "search-description" : undefined}
         />
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden="true">
           <span className="text-gray-400">🔍</span>
         </div>
         {localQuery && (
           <button
             onClick={handleClear}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
             aria-label="Clear search"
+            title="Clear search"
           >
             ✕
           </button>
         )}
       </div>
       {localQuery && (
-        <p className="text-xs text-gray-500 mt-1">
+        <p id="search-description" className="text-xs text-gray-500 mt-1" role="status" aria-live="polite">
           Searching for: <span className="font-semibold">{localQuery}</span>
         </p>
       )}

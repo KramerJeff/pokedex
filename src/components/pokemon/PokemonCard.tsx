@@ -39,9 +39,18 @@ export const PokemonCard = memo(({ id, name }: PokemonCardProps) => {
   const types = getPokemonTypes(pokemon);
 
   return (
-    <div
+    <article
       onClick={handleClick}
-      className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 p-4 cursor-pointer group"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
+      className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-200 p-4 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+      role="button"
+      tabIndex={0}
+      aria-label={`View details for ${formatPokemonName(pokemon.name)}, number ${pokemon.id}, ${types.join(' and ')} type`}
     >
       <div className="flex flex-col items-center">
         {/* Name */}
@@ -50,18 +59,18 @@ export const PokemonCard = memo(({ id, name }: PokemonCardProps) => {
         </h3>
 
         {/* Types */}
-        <div className="flex gap-2 flex-wrap justify-center">
+        <div className="flex gap-2 flex-wrap justify-center" aria-label={`Types: ${types.join(', ')}`}>
           {types.map((type) => (
             <TypeBadge key={type} type={type} size="md" />
           ))}
         </div>
         {/* Sprite */}
         <div className="mb-3 group-hover:scale-110 transition-transform duration-200">
-          <PokemonSprite url={spriteUrl} alt={pokemon.name} size="md" />
+          <PokemonSprite url={spriteUrl} alt={`${formatPokemonName(pokemon.name)} sprite`} size="md" />
         </div>
 
       </div>
-    </div>
+    </article>
   );
 });
 

@@ -73,13 +73,22 @@ export const PokemonDetail = ({ allPokemon }: PokemonDetailProps) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
-        {/* Close Button */}
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pokemon-name"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) handleClose();
+      }}
+    >
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative focus:outline-none">
+        {/* Close Button - Enhanced touch target for mobile */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold z-10"
-          aria-label="Close"
+          className="absolute top-2 right-2 md:top-4 md:right-4 w-10 h-10 md:w-auto md:h-auto flex items-center justify-center text-gray-500 hover:text-gray-700 text-2xl font-bold z-10 focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
+          aria-label="Close dialog"
+          title="Close (ESC)"
         >
           ✕
         </button>
@@ -103,11 +112,11 @@ export const PokemonDetail = ({ allPokemon }: PokemonDetailProps) => {
         )}
 
         {pokemon && (
-          <div className="p-8">
+          <div className="p-4 md:p-8">
             {/* Header */}
             <div className="text-center mb-6">
               <p className="text-sm text-gray-500 mb-1">{formatPokemonId(pokemon.id)}</p>
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">
+              <h2 id="pokemon-name" className="text-3xl font-bold text-gray-800 mb-4">
                 {formatPokemonName(pokemon.name)}
               </h2>
               <div className="flex gap-2 justify-center mb-6">
@@ -179,40 +188,46 @@ export const PokemonDetail = ({ allPokemon }: PokemonDetailProps) => {
             </div>
 
             {/* Navigation */}
-            <div className="flex justify-between items-center pt-4 border-t">
+            <nav className="flex flex-col md:flex-row justify-between items-center pt-4 border-t gap-4">
               <button
                 onClick={handlePrevious}
                 disabled={!prevPokemon}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`w-full md:w-auto px-6 py-3 md:px-4 md:py-2 rounded-lg font-medium transition-colors touch-manipulation ${
                   prevPokemon
-                    ? 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                    ? 'bg-gray-100 hover:bg-gray-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500'
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}
+                aria-label={prevPokemon ? `Previous Pokemon: ${formatPokemonName(prevPokemon.name)}` : 'No previous Pokemon'}
               >
-                ← Previous
-                {prevPokemon && (
-                  <span className="ml-2 text-sm">({formatPokemonName(prevPokemon.name)})</span>
-                )}
+                <span className="flex items-center justify-center">
+                  ← Previous
+                  {prevPokemon && (
+                    <span className="ml-2 text-sm hidden md:inline">({formatPokemonName(prevPokemon.name)})</span>
+                  )}
+                </span>
               </button>
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-gray-500 text-center hidden md:block">
                 <p>Use ← → arrow keys to navigate</p>
                 <p>Press ESC to close</p>
               </div>
               <button
                 onClick={handleNext}
                 disabled={!nextPokemon}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                className={`w-full md:w-auto px-6 py-3 md:px-4 md:py-2 rounded-lg font-medium transition-colors touch-manipulation ${
                   nextPokemon
-                    ? 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+                    ? 'bg-gray-100 hover:bg-gray-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500'
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}
+                aria-label={nextPokemon ? `Next Pokemon: ${formatPokemonName(nextPokemon.name)}` : 'No next Pokemon'}
               >
-                Next →
-                {nextPokemon && (
-                  <span className="mr-2 text-sm">({formatPokemonName(nextPokemon.name)})</span>
-                )}
+                <span className="flex items-center justify-center">
+                  Next →
+                  {nextPokemon && (
+                    <span className="mr-2 text-sm hidden md:inline">({formatPokemonName(nextPokemon.name)})</span>
+                  )}
+                </span>
               </button>
-            </div>
+            </nav>
           </div>
         )}
       </div>
