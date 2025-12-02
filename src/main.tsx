@@ -9,6 +9,7 @@ import './index.css'
 import App from './App.tsx'
 import { CACHE_CONFIG } from './api/constants'
 import { measureWebVitals } from './utils/performance'
+import { ErrorBoundary } from './components/common/ErrorBoundary'
 
 // Create Query Client with optimized cache configuration
 const queryClient = new QueryClient({
@@ -41,11 +42,13 @@ measureWebVitals();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <App />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <App />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </StrictMode>,
 )

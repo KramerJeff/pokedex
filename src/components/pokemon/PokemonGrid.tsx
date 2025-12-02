@@ -91,8 +91,8 @@ export const PokemonGrid = ({ pokemonList, isLoading, limit }: PokemonGridProps)
   }
 
   return (
-    <div className="mb-6">
-      <p className="text-sm text-gray-600 mb-4">
+    <section className="mb-6" aria-labelledby="pokemon-count">
+      <p id="pokemon-count" className="text-sm text-gray-600 mb-4" role="status" aria-live="polite">
         Showing {displayList.length} Pokémon
         {limit && pokemonList.length > limit && ` (limited to first ${limit})`}
       </p>
@@ -100,6 +100,8 @@ export const PokemonGrid = ({ pokemonList, isLoading, limit }: PokemonGridProps)
         ref={parentRef}
         className="h-[calc(100vh-320px)] overflow-auto"
         style={{ contain: 'strict' }}
+        role="region"
+        aria-label="Pokemon grid"
       >
         <div
           style={{
@@ -131,6 +133,6 @@ export const PokemonGrid = ({ pokemonList, isLoading, limit }: PokemonGridProps)
           })}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
