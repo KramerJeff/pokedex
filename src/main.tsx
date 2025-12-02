@@ -8,6 +8,7 @@ import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import './index.css'
 import App from './App.tsx'
 import { CACHE_CONFIG } from './api/constants'
+import { measureWebVitals } from './utils/performance'
 
 // Create Query Client with optimized cache configuration
 const queryClient = new QueryClient({
@@ -34,6 +35,9 @@ persistQueryClient({
   persister,
   maxAge: CACHE_CONFIG.POKEMON_DETAIL_CACHE_TIME,
 })
+
+// Initialize performance monitoring
+measureWebVitals();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
