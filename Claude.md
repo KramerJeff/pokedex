@@ -201,3 +201,11 @@ npm run lint     # Run ESLint
 - Generation filter
 - Evolution chain display
 - Move list and descriptions
+
+Always use context7 when I need code generation, setup or configuration steps, or
+library/API documentation. This means you should automatically use the Context7 MCP
+tools to resolve library id and get library docs without me having to explicitly ask.
+
+Always use test-driven development when creating a new feature
+
+Always create a new Git branch when working on a new feature and never work on the main branch
