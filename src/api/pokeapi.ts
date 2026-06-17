@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { POKEAPI_BASE_URL, ENDPOINTS, POKEMON_LIMIT } from './constants';
-import type { PokemonListResponse, Pokemon, SimplePokemon } from './types';
+import type { PokemonListResponse, Pokemon, SimplePokemon, TypeResponse } from './types';
 
 // Create axios instance with base configuration
 const api = axios.create({
@@ -30,6 +30,15 @@ api.interceptors.response.use(
 );
 
 /**
+ * Extract a Pokemon ID from a PokeAPI resource URL.
+ * e.g. "https://pokeapi.co/api/v2/pokemon/25/" → 25
+ */
+export const parsePokemonId = (url: string): number => {
+  const id = parseInt(url.split('/').filter(Boolean).pop() || '0', 10);
+  return Number.isNaN(id) ? 0 : id;
+};
+
+/**
  * Fetch the complete list of Pokemon (lightweight - just names and URLs)
  * This returns ~1000+ Pokemon with minimal data
  */
@@ -39,14 +48,20 @@ export const fetchPokemonList = async (): Promise<SimplePokemon[]> => {
   });
 
   // Parse Pokemon IDs from URLs and return simplified list
-  return response.data.results.map((pokemon) => {
-    // Extract ID from URL: https://pokeapi.co/api/v2/pokemon/1/
-    const id = parseInt(pokemon.url.split('/').filter(Boolean).pop() || '0');
-    return {
-      id,
-      name: pokemon.name,
-    };
-  });
+  return response.data.results.map((pokemon) => ({
+    id: parsePokemonId(pokemon.url),
+    name: pokemon.name,
+  }));
+};
+
+/**
+ * Fetch the IDs of every Pokemon belonging to a given type.
+ * One request per type (vs. one per Pokemon) — the efficient way to type-filter.
+ * Returns a plain number[] so React Query can persist it to localStorage.
+ */
+export const fetchTypePokemonIds = async (type: string): Promise<number[]> => {
+  const response = await api.get<TypeResponse>(ENDPOINTS.TYPE(type));
+  return response.data.pokemon.map((entry) => parsePokemonId(entry.pokemon.url));
 };
 
 /**

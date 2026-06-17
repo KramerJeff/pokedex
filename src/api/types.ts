@@ -12,6 +12,14 @@ export interface PokemonListResponse {
   results: PokemonListItem[];
 }
 
+// Response shape for the /type/{name} endpoint
+export interface TypeResponse {
+  pokemon: Array<{
+    pokemon: PokemonListItem;
+    slot: number;
+  }>;
+}
+
 export interface PokemonType {
   slot: number;
   type: {

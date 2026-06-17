@@ -1,65 +1,64 @@
 import { useMemo } from 'react';
 import { useQueries } from '@tanstack/react-query';
-import type { Pokemon, FilterMode, PokemonTypeName } from '../api/types';
-import { fetchPokemon } from '../api/pokeapi';
+import type { FilterMode, PokemonTypeName } from '../api/types';
+import { fetchTypePokemonIds } from '../api/pokeapi';
 import { CACHE_CONFIG } from '../api/constants';
+import { combineIdSets } from '../utils/pokemonHelpers';
 
 /**
- * Hook to filter Pokemon by types
- * @param pokemonIds - List of Pokemon IDs to filter
+ * Hook to compute the set of Pokemon IDs matching the selected type filters.
+ *
+ * Instead of fetching every Pokemon's details to read its types, this fetches
+ * the lightweight `/type/{name}` endpoint once per *selected* type (≤18 total,
+ * usually 1-2) and combines the resulting ID lists:
+ *   - OR  → union (matches at least one selected type)
+ *   - AND → intersection (matches every selected type)
+ *
  * @param selectedTypes - Selected type filters
  * @param filterMode - AND or OR mode
- * @returns Filtered Pokemon IDs
+ * @returns `matchingIds` is a Set of IDs to keep, or `null` when no type filter
+ *          is active (meaning "don't filter by type at all").
  */
 export const useTypeFilter = (
-  pokemonIds: number[],
   selectedTypes: PokemonTypeName[],
   filterMode: FilterMode
 ) => {
-  // Fetch Pokemon details for all IDs (will use cache for already-fetched Pokemon)
-  // Always call useQueries to maintain hook order
-  const pokemonQueries = useQueries({
-    queries: pokemonIds.map((id) => ({
-      queryKey: ['pokemon', 'detail', id],
-      queryFn: () => fetchPokemon(id),
+  const typeQueries = useQueries({
+    queries: selectedTypes.map((type) => ({
+      queryKey: ['type', type],
+      queryFn: () => fetchTypePokemonIds(type),
+      // Type membership rarely changes — cache it like Pokemon details.
       staleTime: CACHE_CONFIG.POKEMON_DETAIL_STALE_TIME,
       gcTime: CACHE_CONFIG.POKEMON_DETAIL_CACHE_TIME,
-      enabled: selectedTypes.length > 0, // Only fetch if types are selected
     })),
   });
 
-  const isLoading = pokemonQueries.some((query) => query.isLoading);
+  const isLoading = typeQueries.some((query) => query.isLoading);
 
-  const filteredIds = useMemo(() => {
-    // If no filters, return all IDs
-    if (selectedTypes.length === 0) {
-      return pokemonIds;
-    }
+  // Stable signature so the Set is only rebuilt when the resolved data changes,
+  // not on every render (typeQueries is a fresh array each render).
+  const signature = typeQueries
+    .map((query) => (query.data ? query.data.length : 'pending'))
+    .join('|');
 
-    // Wait for all queries to complete
-    if (isLoading) return [];
+  const matchingIds = useMemo<Set<number> | null>(() => {
+    // No type filter active.
+    if (selectedTypes.length === 0) return null;
 
-    const pokemonData = pokemonQueries
+    // Wait until every selected type has resolved before computing a result.
+    if (isLoading) return null;
+
+    const idArrays = typeQueries
       .map((query) => query.data)
-      .filter((data): data is Pokemon => data !== undefined);
+      .filter((data): data is number[] => data !== undefined);
 
-    return pokemonData
-      .filter((pokemon) => {
-        const pokemonTypes = pokemon.types.map((t) => t.type.name as PokemonTypeName);
-
-        if (filterMode === 'AND') {
-          // Pokemon must have ALL selected types
-          return selectedTypes.every((type) => pokemonTypes.includes(type));
-        } else {
-          // Pokemon must have AT LEAST ONE selected type
-          return selectedTypes.some((type) => pokemonTypes.includes(type));
-        }
-      })
-      .map((pokemon) => pokemon.id);
-  }, [pokemonQueries, selectedTypes, filterMode, isLoading, pokemonIds]);
+    return combineIdSets(idArrays, filterMode);
+    // typeQueries intentionally omitted; `signature` captures its resolved data.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTypes.length, filterMode, isLoading, signature]);
 
   return {
-    filteredIds,
+    matchingIds,
     isLoading: selectedTypes.length > 0 ? isLoading : false,
   };
 };

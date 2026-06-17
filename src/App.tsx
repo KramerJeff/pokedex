@@ -19,26 +19,19 @@ function App() {
   // Apply search filter
   const searchedPokemon = useSearch(pokemonList, searchQuery);
 
-  // Get IDs from searched Pokemon
-  const searchedIds = useMemo(
-    () => searchedPokemon.map((p) => p.id),
-    [searchedPokemon]
-  );
-
-  // Apply type filter
-  const { filteredIds, isLoading: isFilterLoading } = useTypeFilter(
-    searchedIds,
+  // Resolve the set of IDs matching the selected types (null = no type filter)
+  const { matchingIds, isLoading: isFilterLoading } = useTypeFilter(
     selectedTypes,
     filterMode
   );
 
-  // Get final filtered list
+  // Get final filtered list (O(1) Set lookups)
   const finalPokemonList = useMemo(() => {
-    if (selectedTypes.length === 0) {
+    if (!matchingIds) {
       return searchedPokemon;
     }
-    return searchedPokemon.filter((p) => filteredIds.includes(p.id));
-  }, [searchedPokemon, filteredIds, selectedTypes.length]);
+    return searchedPokemon.filter((p) => matchingIds.has(p.id));
+  }, [searchedPokemon, matchingIds]);
 
   return (
     <Layout>
