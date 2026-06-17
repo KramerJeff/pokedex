@@ -1,4 +1,4 @@
-import type { Pokemon, PokemonSprites } from '../api/types';
+import type { Pokemon } from '../api/types';
 
 /**
  * Get sprite URL for a Pokemon with fallback hierarchy

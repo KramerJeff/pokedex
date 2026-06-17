@@ -15,7 +15,6 @@ export const PokemonSprite = ({ url, shinyUrl, alt, size = 'md', priority = fals
   const [isHovered, setIsHovered] = useState(false);
   const [shinyLoaded, setShinyLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
-  const shinyImgRef = useRef<HTMLImageElement>(null);
 
   const sizeClasses = {
     sm: 'w-16 h-16',
@@ -47,14 +46,6 @@ export const PokemonSprite = ({ url, shinyUrl, alt, size = 'md', priority = fals
     return () => observer.disconnect();
   }, [priority]);
 
-  if (!url || hasError) {
-    return (
-      <div className={`${sizeClasses[size]} flex items-center justify-center bg-gray-100 rounded-lg`}>
-        <span className="text-3xl">❓</span>
-      </div>
-    );
-  }
-
   // Preload shiny sprite on hover
   useEffect(() => {
     if (isHovered && shinyUrl && !shinyLoaded) {
@@ -63,6 +54,15 @@ export const PokemonSprite = ({ url, shinyUrl, alt, size = 'md', priority = fals
       img.src = shinyUrl;
     }
   }, [isHovered, shinyUrl, shinyLoaded]);
+
+  if (!url || hasError) {
+    return (
+      <div className={`${sizeClasses[size]} flex items-center justify-center bg-gray-100 rounded-lg`}>
+        <span className="text-3xl">❓</span>
+      </div>
+    );
+  }
+
 
   const displayUrl = isHovered && shinyUrl && shinyLoaded ? shinyUrl : url;
 

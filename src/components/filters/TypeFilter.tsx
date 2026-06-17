@@ -1,4 +1,4 @@
-import { POKEMON_TYPES, type PokemonTypeName } from '../../api/types';
+import { POKEMON_TYPES } from '../../api/types';
 import { useFilterStore } from '../../store/filterStore';
 import { getTypeColor } from '../../utils/pokemonHelpers';
 
