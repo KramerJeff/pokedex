@@ -1,4 +1,4 @@
-import type { Pokemon, PokemonTypeName } from '../api/types';
+import type { FilterMode, Pokemon, PokemonTypeName } from '../api/types';
 
 /**
  * Format Pokemon name for display (capitalize first letter)
@@ -12,6 +12,30 @@ export const formatPokemonName = (name: string): string => {
  */
 export const formatPokemonId = (id: number): string => {
   return `#${id.toString().padStart(3, '0')}`;
+};
+
+/**
+ * Combine arrays of Pokemon IDs (one per selected type) into a single Set.
+ * - OR mode  → union (Pokemon matching at least one selected type)
+ * - AND mode → intersection (Pokemon matching every selected type)
+ */
+export const combineIdSets = (
+  idArrays: number[][],
+  mode: FilterMode
+): Set<number> => {
+  if (idArrays.length === 0) return new Set();
+
+  if (mode === 'AND') {
+    return idArrays.reduce((acc, ids) => {
+      const idSet = new Set(ids);
+      return new Set([...acc].filter((id) => idSet.has(id)));
+    }, new Set<number>(idArrays[0]));
+  }
+
+  // OR → union
+  const union = new Set<number>();
+  idArrays.forEach((ids) => ids.forEach((id) => union.add(id)));
+  return union;
 };
 
 /**
