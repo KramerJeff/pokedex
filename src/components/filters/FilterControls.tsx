@@ -1,9 +1,17 @@
 import { useFilterStore } from '../../store/filterStore';
 
 export const FilterControls = () => {
-  const { selectedTypes, filterMode, setFilterMode, clearTypeFilters, resetFilters } = useFilterStore();
+  const {
+    selectedTypes,
+    filterMode,
+    setFilterMode,
+    clearTypeFilters,
+    selectedGenerations,
+    clearGenerationFilters,
+    resetFilters,
+  } = useFilterStore();
 
-  const hasActiveFilters = selectedTypes.length > 0;
+  const hasActiveFilters = selectedTypes.length > 0 || selectedGenerations.length > 0;
 
   return (
     <div className="flex flex-wrap items-center gap-4">
@@ -42,12 +50,22 @@ export const FilterControls = () => {
       {/* Clear Buttons */}
       {hasActiveFilters && (
         <div className="flex gap-2">
-          <button
-            onClick={clearTypeFilters}
-            className="px-3 py-1 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            Clear Types
-          </button>
+          {selectedTypes.length > 0 && (
+            <button
+              onClick={clearTypeFilters}
+              className="px-3 py-1 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Clear Types
+            </button>
+          )}
+          {selectedGenerations.length > 0 && (
+            <button
+              onClick={clearGenerationFilters}
+              className="px-3 py-1 text-sm text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Clear Generations
+            </button>
+          )}
           <button
             onClick={resetFilters}
             className="px-3 py-1 text-sm text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors font-medium"
