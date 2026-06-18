@@ -6,15 +6,17 @@ import { PokemonDetail } from './components/pokemon/PokemonDetail';
 import { Loading } from './components/common/Loading';
 import { SearchBar } from './components/filters/SearchBar';
 import { TypeFilter } from './components/filters/TypeFilter';
+import { GenerationFilter } from './components/filters/GenerationFilter';
 import { FilterControls } from './components/filters/FilterControls';
 import { usePokemonList } from './hooks/usePokemonList';
 import { useSearch } from './hooks/useSearch';
 import { useTypeFilter } from './hooks/useTypeFilter';
+import { filterPokemonByGeneration } from './utils/pokemonHelpers';
 import { useFilterStore } from './store/filterStore';
 
 function App() {
   const { data: pokemonList, isLoading, isError } = usePokemonList();
-  const { searchQuery, selectedTypes, filterMode } = useFilterStore();
+  const { searchQuery, selectedTypes, filterMode, selectedGenerations } = useFilterStore();
 
   // Apply search filter
   const searchedPokemon = useSearch(pokemonList, searchQuery);
@@ -25,13 +27,13 @@ function App() {
     filterMode
   );
 
-  // Get final filtered list (O(1) Set lookups)
+  // Get final filtered list: type filter (O(1) Set lookups) + generation filter
   const finalPokemonList = useMemo(() => {
-    if (!matchingIds) {
-      return searchedPokemon;
-    }
-    return searchedPokemon.filter((p) => matchingIds.has(p.id));
-  }, [searchedPokemon, matchingIds]);
+    const typeFiltered = matchingIds
+      ? searchedPokemon.filter((p) => matchingIds.has(p.id))
+      : searchedPokemon;
+    return filterPokemonByGeneration(typeFiltered, selectedGenerations);
+  }, [searchedPokemon, matchingIds, selectedGenerations]);
 
   return (
     <Layout>
@@ -52,6 +54,9 @@ function App() {
 
             {/* Type Filter */}
             <TypeFilter />
+
+            {/* Generation Filter */}
+            <GenerationFilter />
 
             {/* Filter Controls */}
             <FilterControls />

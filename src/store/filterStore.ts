@@ -13,6 +13,11 @@ interface FilterState {
   setFilterMode: (mode: FilterMode) => void;
   clearTypeFilters: () => void;
 
+  // Generation filter state
+  selectedGenerations: number[];
+  toggleGeneration: (generation: number) => void;
+  clearGenerationFilters: () => void;
+
   // Reset all filters
   resetFilters: () => void;
 }
@@ -22,6 +27,7 @@ export const useFilterStore = create<FilterState>((set) => ({
   searchQuery: '',
   selectedTypes: [],
   filterMode: 'OR',
+  selectedGenerations: [],
 
   // Search actions
   setSearchQuery: (query) => set({ searchQuery: query }),
@@ -38,11 +44,22 @@ export const useFilterStore = create<FilterState>((set) => ({
 
   clearTypeFilters: () => set({ selectedTypes: [] }),
 
+  // Generation filter actions
+  toggleGeneration: (generation) =>
+    set((state) => ({
+      selectedGenerations: state.selectedGenerations.includes(generation)
+        ? state.selectedGenerations.filter((g) => g !== generation)
+        : [...state.selectedGenerations, generation],
+    })),
+
+  clearGenerationFilters: () => set({ selectedGenerations: [] }),
+
   // Reset all
   resetFilters: () =>
     set({
       searchQuery: '',
       selectedTypes: [],
       filterMode: 'OR',
+      selectedGenerations: [],
     }),
 }));

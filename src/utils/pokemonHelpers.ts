@@ -1,4 +1,4 @@
-import type { FilterMode, Pokemon, PokemonTypeName } from '../api/types';
+import type { FilterMode, Pokemon, PokemonTypeName, SimplePokemon } from '../api/types';
 
 /**
  * Format Pokemon name for display (capitalize first letter)
@@ -103,6 +103,20 @@ export const getPokemonGeneration = (id: number): number => {
   if (id <= 809) return 7;
   if (id <= 905) return 8;
   return 9;
+};
+
+/**
+ * Filter a Pokemon list to only those in the selected generations.
+ * Generation is derived from the ID (no extra API calls needed).
+ * Returns the original list unchanged when no generations are selected.
+ */
+export const filterPokemonByGeneration = (
+  pokemon: SimplePokemon[],
+  generations: number[]
+): SimplePokemon[] => {
+  if (generations.length === 0) return pokemon;
+  const genSet = new Set(generations);
+  return pokemon.filter((p) => genSet.has(getPokemonGeneration(p.id)));
 };
 
 /**
