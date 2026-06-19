@@ -48,7 +48,7 @@ function App() {
 
       {pokemonList && !isLoading && (
         <>
-          <div className="space-y-6">
+          <div className="flex-1 min-h-0 flex flex-col gap-6">
             {/* Search + filters: one row on large viewports, each on its own row below */}
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
               {/* Search Bar - grows to fill, but never narrower than 400px on a shared row */}
@@ -63,8 +63,18 @@ function App() {
               <GenerationFilter />
             </div>
 
-            {/* Filter Controls */}
-            <FilterControls />
+            {/* Result count (left) + Filter Controls (right) */}
+            <div className="flex items-center justify-between gap-4">
+              <p
+                id="pokemon-count"
+                className="text-sm text-gray-600 shrink-0"
+                role="status"
+                aria-live="polite"
+              >
+                Showing {finalPokemonList.length} Pokémon
+              </p>
+              <FilterControls />
+            </div>
 
             {/* Pokemon Grid - fills remaining viewport height */}
             <div className="flex-1 min-h-0">

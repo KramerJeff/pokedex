@@ -91,11 +91,7 @@ export const PokemonGrid = ({ pokemonList, isLoading, limit }: PokemonGridProps)
   }
 
   return (
-    <section className="h-full flex flex-col min-h-0" aria-labelledby="pokemon-count">
-      <p id="pokemon-count" className="text-sm text-gray-600 mb-4 shrink-0" role="status" aria-live="polite">
-        Showing {displayList.length} Pokémon
-        {limit && pokemonList.length > limit && ` (limited to first ${limit})`}
-      </p>
+    <section className="h-full flex flex-col min-h-0" aria-label="Pokémon grid">
       <div
         ref={parentRef}
         className="flex-1 min-h-0 overflow-auto custom-scrollbar"
