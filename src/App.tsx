@@ -48,15 +48,20 @@ function App() {
 
       {pokemonList && !isLoading && (
         <>
-          <div className="flex-1 min-h-0 flex flex-col gap-6">
-            {/* Search Bar */}
-            <SearchBar />
+          <div className="space-y-6">
+            {/* Search + filters: one row on large viewports, each on its own row below */}
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+              {/* Search Bar - grows to fill, but never narrower than 400px on a shared row */}
+              <div className="w-full lg:flex-1 lg:min-w-[400px]">
+                <SearchBar />
+              </div>
 
-            {/* Type Filter */}
-            <TypeFilter />
+              {/* Type Filter */}
+              <TypeFilter />
 
-            {/* Generation Filter */}
-            <GenerationFilter />
+              {/* Generation Filter */}
+              <GenerationFilter />
+            </div>
 
             {/* Filter Controls */}
             <FilterControls />
