@@ -48,7 +48,7 @@ function App() {
 
       {pokemonList && !isLoading && (
         <>
-          <div className="space-y-6">
+          <div className="flex-1 min-h-0 flex flex-col gap-6">
             {/* Search Bar */}
             <SearchBar />
 
@@ -61,12 +61,14 @@ function App() {
             {/* Filter Controls */}
             <FilterControls />
 
-            {/* Pokemon Grid */}
-            {isFilterLoading ? (
-              <Loading message="Filtering Pokémon..." />
-            ) : (
-              <PokemonGrid pokemonList={finalPokemonList} />
-            )}
+            {/* Pokemon Grid - fills remaining viewport height */}
+            <div className="flex-1 min-h-0">
+              {isFilterLoading ? (
+                <Loading message="Filtering Pokémon..." />
+              ) : (
+                <PokemonGrid pokemonList={finalPokemonList} />
+              )}
+            </div>
           </div>
 
           {/* Pokemon Detail Modal - Uses React Router */}
