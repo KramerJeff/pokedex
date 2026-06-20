@@ -61,7 +61,7 @@ export function MultiSelectDropdown<T extends string | number>({
         aria-haspopup="true"
         aria-expanded={open}
         aria-controls={panelId}
-        className="flex w-full items-center justify-between gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 lg:w-auto lg:min-w-[160px]"
+        className="flex w-full items-center justify-between gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-500 lg:h-[42px] lg:w-auto lg:min-w-[160px]"
       >
         <span className="flex items-center gap-2">
           {label}
